@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>{{ page_title }} | Cashflow</title>
+    </head>
+    <body>
+        <form method="POST" enctype="multipart/form-data">
+            <input type="file" name="data.csv">
+            <input type="submit">
+        </form>
+        {%- if upload_message %}<p>{{ upload_message }}</p>{% endif %}
+        <table>
+            {%- for row in table %}
+            <tr>
+                <td>{{ row.date }}</td>
+                <td>{{ row.name }}</td>
+                <td>{{ row.account }}</td>
+                <td>{{ row.other_account }}</td>
+                <td>{{ row.code }}</td>
+                <td>{{ row.amount }}</td>
+                <td>{{ row.mutation_kind }}</td>
+                <td>{{ row.description }}</td>
+                <td>{{ row.balance_after_mutation }}</td>
+                <td>{{ row.tag }}</td>
+            </tr>
+            {%- endfor %}
+        </table>
+    </body>
+</html>
