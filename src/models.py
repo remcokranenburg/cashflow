@@ -9,12 +9,15 @@ Base = declarative_base()
 def parse_date(txt):
     return date(int(txt[0:4]), int(txt[4:6]), int(txt[6:8]))
 
+
 def parse_amount(sign, value):
     value = value.replace(".", "").replace(",", ".")
     return float(value) if sign == "Bij" else -float(value)
 
+
 class IngTransaction(Base):
     __tablename__ = "ingtransactions"
+
     id = Column(Integer, primary_key=True)
     date = Column(Date)
     name = Column(String)
@@ -29,8 +32,6 @@ class IngTransaction(Base):
 
     @classmethod
     def from_csv_line(cls, csv_line):
-
-
         return cls(date=parse_date(csv_line[0]),
                    name=csv_line[1],
                    account=csv_line[2],

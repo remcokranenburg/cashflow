@@ -1,9 +1,8 @@
 #!/usr/bin/env python3
 
-from sqlalchemy import create_engine
-
 from models import Base
+from settings import engine
+
 
 if __name__ == "__main__":
-    engine = create_engine("sqlite:///generated/data.sqlite")
     Base.metadata.create_all(engine)
