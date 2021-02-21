@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>{{ page_title }} | Cashflow</title>
+    </head>
+    <body>
+        <table>
+            {%- for row in table %}
+            <tr>
+                <td>{{ row.date }}</td>
+                <td>{{ row.amount }}</td>
+            </tr>
+            {%- endfor %}
+        </table>
+    </body>
+</html>

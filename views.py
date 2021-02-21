@@ -1,9 +1,30 @@
 import csv
 
 from flask import render_template
+from sqlalchemy.sql import select
 
 from models import Base, IngTransaction
 from settings import DBSession
+
+
+class Balance:
+    page_title = "Balance"
+    upload_message = None
+
+    def retrieve_data(self):
+        session = DBSession()
+        result = (session.query(IngTransaction)
+                  .order_by(IngTransaction.date)
+                  .all())
+        session.close()
+        return result
+
+    def as_view(self, request):
+
+        data = self.retrieve_data()
+
+        return render_template("balance.html", page_title=self.page_title,
+                               table=data)
 
 
 class IngChecking:
@@ -28,7 +49,9 @@ class IngChecking:
 
     def retrieve_data(self):
         session = DBSession()
-        result = session.query(IngTransaction).all()
+        result = (session.query(IngTransaction)
+                  .order_by(IngTransaction.date)
+                  .all())
         session.close()
         return result
 

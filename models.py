@@ -32,13 +32,17 @@ class IngTransaction(Base):
 
     @classmethod
     def from_csv_line(cls, csv_line):
+        amount = parse_amount(csv_line[5], csv_line[6])
+        after_balance = float(csv_line[9]) if len(csv_line) > 9 else 0
+        tag = csv_line[10] if len(csv_line) > 10 else ""
+
         return cls(date=parse_date(csv_line[0]),
                    name=csv_line[1],
                    account=csv_line[2],
                    other_account=csv_line[3],
                    code=csv_line[4],
-                   amount=parse_amount(csv_line[5], csv_line[6]),
+                   amount=amount,
                    mutation_kind=csv_line[7],
                    description=csv_line[8],
-                   balance_after_mutation=csv_line[9] if len(csv_line) > 9 else 0,
-                   tag=csv_line[10] if len(csv_line) > 10 else "")
+                   balance_after_mutation=after_balance,
+                   tag=tag)
