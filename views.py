@@ -12,10 +12,15 @@ class Balance:
     upload_message = None
 
     def retrieve_data(self):
+        ingtransactions = IngTransaction.__table__
+
         session = DBSession()
-        result = (session.query(IngTransaction)
-                  .order_by(IngTransaction.date)
-                  .all())
+
+        statement = (
+            select([ingtransactions.c.date, ingtransactions.c.amount])
+                .order_by(ingtransactions.c.date)
+        )
+        result = session.connection().execute(statement).fetchall()
         session.close()
         return result
 
