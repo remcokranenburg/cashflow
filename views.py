@@ -1,7 +1,7 @@
 import csv
 
 from flask import render_template
-from sqlalchemy.sql import select
+from sqlalchemy import func
 
 from models import Base, IngTransaction
 from settings import DBSession
@@ -12,15 +12,20 @@ class Balance:
     upload_message = None
 
     def retrieve_data(self):
-        ingtransactions = IngTransaction.__table__
-
         session = DBSession()
-
-        statement = (
-            select([ingtransactions.c.date, ingtransactions.c.amount])
-                .order_by(ingtransactions.c.date)
+        year_month = func.date(IngTransaction.date, "start of month")
+        result = (
+            session.query(
+                year_month,
+                func.sum(IngTransaction.amount)
+                    .over(partition_by=year_month),
+                func.last_value(IngTransaction.balance_after_mutation)
+                    .over(partition_by=year_month)
+            )
+            .distinct(IngTransaction.date)
+            .order_by(IngTransaction.date)
+            .all()
         )
-        result = session.connection().execute(statement).fetchall()
         session.close()
         return result
 

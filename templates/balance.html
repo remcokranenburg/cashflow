@@ -7,8 +7,9 @@
         <table>
             {%- for row in table %}
             <tr>
-                <td>{{ row.date }}</td>
-                <td>{{ row.amount }}</td>
+                {%- for cell in row %}
+                <td>{{ cell }}</td>
+                {%- endfor %}
             </tr>
             {%- endfor %}
         </table>
