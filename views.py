@@ -1,7 +1,7 @@
 import csv
 
 from flask import render_template
-from sqlalchemy import func
+from sqlalchemy import func, inspect
 
 from models import Base, IngTransaction
 from settings import DBSession
@@ -72,8 +72,11 @@ class IngChecking:
             self.process_post()
 
         data = self.retrieve_data()
-        return render_template("datatable.html", page_title=self.page_title,
-                               upload_message=self.upload_message, table=data)
+        return render_template("datatable.html",
+                               page_title=self.page_title,
+                               upload_message=self.upload_message,
+                               columns=inspect(IngTransaction).columns.keys(),
+                               table=data)
 
     def process_post():
         upload_message = None

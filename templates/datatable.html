@@ -10,18 +10,16 @@
         </form>
         {%- if upload_message %}<p>{{ upload_message }}</p>{% endif %}
         <table>
+            <tr>
+                {%- for column in columns %}
+                <td>{{ column }}</td>
+                {%- endfor %}
+            </tr>
             {%- for row in table %}
             <tr>
-                <td>{{ row.date }}</td>
-                <td>{{ row.name }}</td>
-                <td>{{ row.account }}</td>
-                <td>{{ row.other_account }}</td>
-                <td>{{ row.code }}</td>
-                <td>{{ row.amount }}</td>
-                <td>{{ row.mutation_kind }}</td>
-                <td>{{ row.description }}</td>
-                <td>{{ row.balance_after_mutation }}</td>
-                <td>{{ row.tag }}</td>
+                {%- for column in columns %}
+                <td>{{ row[column] }}</td>
+                {%- endfor %}
             </tr>
             {%- endfor %}
         </table>
