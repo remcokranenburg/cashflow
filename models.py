@@ -10,7 +10,7 @@ def parse_date(txt):
     return date(int(txt[0:4]), int(txt[4:6]), int(txt[6:8]))
 
 
-def parse_amount(sign, value):
+def parse_amount(value, sign="Bij"):
     value = value.replace(".", "").replace(",", ".")
     return float(value) if sign == "Bij" else -float(value)
 
@@ -32,8 +32,8 @@ class IngTransaction(Base):
 
     @classmethod
     def from_csv_line(cls, csv_line):
-        amount = parse_amount(csv_line[5], csv_line[6])
-        after_balance = float(csv_line[9]) if len(csv_line) > 9 else 0
+        amount = parse_amount(csv_line[6], sign=csv_line[5])
+        after_balance = parse_amount(csv_line[9]) if len(csv_line) > 9 else 0
         tag = csv_line[10] if len(csv_line) > 10 else ""
 
         return cls(date=parse_date(csv_line[0]),

@@ -85,13 +85,14 @@ class IngChecking:
                                columns=inspect(IngTransaction).columns.keys(),
                                table=data)
 
-    def process_post():
+    def process_post(self):
         upload_message = None
 
-        if "data.csv" in request.files:
+        if "data.csv" in self.request.files:
             file = self.request.files["data.csv"]
-            file_contents = file.read().decode("utf-8").split("\n")
-            table = csv.reader(file_contents)
+            file_contents = file.read().decode("utf-8")
+            dialect = csv.Sniffer().sniff(file_contents)
+            table = csv.reader(file_contents.split("\n"), dialect)
             self.persist_data(table)
             self.upload_message = "CSV file imported"
 
