@@ -4,17 +4,21 @@
         <title>{{ page_title }} | Cashflow</title>
     </head>
     <body>
+        {%- if upload_form_visible %}
         <form method="POST" enctype="multipart/form-data">
             <input type="file" name="data.csv">
             <input type="submit">
         </form>
+        {%- endif %}
         {%- if upload_message %}<p>{{ upload_message }}</p>{% endif %}
         <table>
+            {%- if columns %}
             <tr>
                 {%- for column in columns %}
                 <td>{{ column }}</td>
                 {%- endfor %}
             </tr>
+            {%- endif %}
             {%- for row in table %}
             <tr>
                 {%- for column in columns %}
