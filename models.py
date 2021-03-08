@@ -46,3 +46,10 @@ class IngTransaction(Base):
                    description=csv_line[8],
                    balance_after_mutation=after_balance,
                    tag=tag)
+
+class MeesmanBalance(Base):
+    __tablename__ = "meesmanbalances"
+
+    id = Column(Integer, primary_key=True)
+    deposit = Column(Numeric)
+    value = Column(Numeric)
