@@ -22,7 +22,13 @@
             {%- for row in table %}
             <tr>
                 {%- for column in columns %}
+                {%- if row[column] is float %}
+                <td>{{ row[column] | round(2) }}</td>
+                {%- elif row[column] is none %}
+                <td>-</td>
+                {%- else %}
                 <td>{{ row[column] }}</td>
+                {%- endif %}
                 {%- endfor %}
             </tr>
             {%- endfor %}

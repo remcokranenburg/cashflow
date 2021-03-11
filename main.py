@@ -1,6 +1,6 @@
 from flask import Flask, render_template, request
 
-from views import Balance, IngChecking
+from views import Balance, IngChecking, Meesman
 
 app = Flask("cashflow")
 
@@ -18,4 +18,8 @@ def balance():
 @app.route("/ing-checking", methods=["GET", "POST"])
 def ing_checking():
     return IngChecking().as_view(request)
+
+@app.route("/meesman", methods=["GET", "POST"])
+def meesman():
+    return Meesman().as_view(request)
 
