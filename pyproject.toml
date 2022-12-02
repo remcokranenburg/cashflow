@@ -8,6 +8,7 @@ authors = ["Remco Kranenburg <remco@burgsoft.nl>"]
 python = "^3.9"
 Flask = "^1.1.2"
 sqlalchemy = "^1.3.23"
+PyGObject = "^3.42.2"
 
 [tool.poetry.dev-dependencies]
 
