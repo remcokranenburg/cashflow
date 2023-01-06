@@ -9,42 +9,56 @@ from models import Base, IngTransaction, MeesmanBalance
 from settings import DBSession
 
 
-LIST_ITEM_UI = """\
-<?xml version="1.0" encoding="UTF-8"?>
-<interface>
-    <template class="GtkListItem">
-        <property name="child">
-            <object class="GtkLabel">
-                <property name="xalign">0</property>
-                <binding name="label">
-                    <lookup name="name" type="views+BalanceRecord">
-                        <lookup name="item">GtkListItem</lookup>
-                    </lookup>
-                </binding>
-            </object>
-        </property>
-    </template>
-</interface>
-"""
-
-
 def year_month(model):
     return func.date(model.date, "start of month")
 
 
 class BalanceRecord(GObject.GObject):
-    def __init__(self, name: str, age: float):
+    def __init__(self, date: str, ing_checking: float, meesman: float,
+            net_worth: float):
         super().__init__()
-        self._name = name
-        self._age = age
+        self._date = date
+        self._ing_checking = ing_checking
+        self._meesman = meesman
+        self._net_worth = net_worth
+
+    @staticmethod
+    def get_factory(property_name: str):
+        ui_description = f"""\
+            <?xml version="1.0" encoding="UTF-8"?>
+            <interface>
+                <template class="GtkListItem">
+                    <property name="child">
+                        <object class="GtkLabel">
+                            <property name="xalign">0</property>
+                            <binding name="label">
+                                <lookup name="{property_name}" type="views+BalanceRecord">
+                                    <lookup name="item">GtkListItem</lookup>
+                                </lookup>
+                            </binding>
+                        </object>
+                    </property>
+                </template>
+            </interface>
+            """
+        ui_bytes = GLib.Bytes.new(ui_description.encode("utf-8"))
+        return Gtk.BuilderListItemFactory.new_from_bytes(None, ui_bytes)
 
     @GObject.Property(type=str)
-    def name(self):
-        return self._name
+    def date(self):
+        return self._date
 
     @GObject.Property(type=float)
-    def age(self):
-        return self._age
+    def ing_checking(self):
+        return self._ing_checking
+
+    @GObject.Property(type=float)
+    def meesman(self):
+        return self._meesman
+
+    @GObject.Property(type=float)
+    def net_worth(self):
+        return self._net_worth
 
 
 class Balance:
@@ -91,19 +105,30 @@ class Balance:
         return result
 
     def as_view(self):
-        balance_list = Gio.ListStore.new(BalanceRecord)
-        balance_list.append(BalanceRecord("Jack", 34.8))
-        balance_list.append(BalanceRecord("Andrea", 37.0))
-        balance_list.append(BalanceRecord("Kim", 24.3))
-
         data = self.retrieve_data()
         columns = data[0].keys() if len(data) > 0 else []
 
-        selection = Gtk.SingleSelection.new(balance_list)
-        list_item_ui_bytes = GLib.Bytes.new(LIST_ITEM_UI.encode("utf-8"))
-        factory = Gtk.BuilderListItemFactory.new_from_bytes(None, list_item_ui_bytes)
+        print("data:", data)
 
-        return Gtk.ListView.new(selection, factory)
+        balance_list = Gio.ListStore.new(BalanceRecord)
+
+        for record in data:
+            balance_list.append(BalanceRecord(*record))
+
+        selection = Gtk.SingleSelection.new(balance_list)
+        view = Gtk.ColumnView.new(selection)
+
+        columns = [
+            Gtk.ColumnViewColumn.new("Date", BalanceRecord.get_factory("date")),
+            Gtk.ColumnViewColumn.new("ING Checking", BalanceRecord.get_factory("ing_checking")),
+            Gtk.ColumnViewColumn.new("Meesman", BalanceRecord.get_factory("meesman")),
+            Gtk.ColumnViewColumn.new("Net Worth", BalanceRecord.get_factory("net_worth")),
+        ]
+
+        for column in columns:
+            view.append_column(column)
+
+        return view
 
 
 class Datatable:

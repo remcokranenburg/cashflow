@@ -19,8 +19,10 @@ def on_activate(application: Gtk.Application):
 
     balance_view = Balance().as_view()
 
-    window.set_child(balance_view)
+    scrolled_window = Gtk.ScrolledWindow()
+    scrolled_window.set_child(balance_view)
 
+    window.set_child(scrolled_window)
     window.present()
 
 
