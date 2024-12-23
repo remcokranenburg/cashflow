@@ -6,7 +6,7 @@ authors = ["Remco Kranenburg <remco@burgsoft.nl>"]
 
 [tool.poetry.dependencies]
 python = "^3.9"
-Flask = "^1.1.2"
+Flask = "^2.2.5"
 sqlalchemy = "^1.3.23"
 
 [tool.poetry.dev-dependencies]
